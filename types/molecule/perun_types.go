@@ -1466,27 +1466,24 @@ func (s *App) AsBuilder() AppBuilder {
 }
 
 type ParticipantBuilder struct {
-	payment_lock_hash    Byte32
+	payment_script_hash  Byte32
 	payment_min_capacity Uint64
-	unlock_args          Bytes
-	payment_args         Bytes
+	unlock_script_hash   Byte32
 	pub_key              SEC1EncodedPubKey
 }
 
 func (s *ParticipantBuilder) Build() Participant {
 	b := new(bytes.Buffer)
 
-	totalSize := HeaderSizeUint * (5 + 1)
-	offsets := make([]uint32, 0, 5)
+	totalSize := HeaderSizeUint * (4 + 1)
+	offsets := make([]uint32, 0, 4)
 
 	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.payment_lock_hash.AsSlice()))
+	totalSize += uint32(len(s.payment_script_hash.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.payment_min_capacity.AsSlice()))
 	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.unlock_args.AsSlice()))
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.payment_args.AsSlice()))
+	totalSize += uint32(len(s.unlock_script_hash.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.pub_key.AsSlice()))
 
@@ -1496,16 +1493,15 @@ func (s *ParticipantBuilder) Build() Participant {
 		b.Write(packNumber(Number(offsets[i])))
 	}
 
-	b.Write(s.payment_lock_hash.AsSlice())
+	b.Write(s.payment_script_hash.AsSlice())
 	b.Write(s.payment_min_capacity.AsSlice())
-	b.Write(s.unlock_args.AsSlice())
-	b.Write(s.payment_args.AsSlice())
+	b.Write(s.unlock_script_hash.AsSlice())
 	b.Write(s.pub_key.AsSlice())
 	return Participant{inner: b.Bytes()}
 }
 
-func (s *ParticipantBuilder) PaymentLockHash(v Byte32) *ParticipantBuilder {
-	s.payment_lock_hash = v
+func (s *ParticipantBuilder) PaymentScriptHash(v Byte32) *ParticipantBuilder {
+	s.payment_script_hash = v
 	return s
 }
 
@@ -1514,13 +1510,8 @@ func (s *ParticipantBuilder) PaymentMinCapacity(v Uint64) *ParticipantBuilder {
 	return s
 }
 
-func (s *ParticipantBuilder) UnlockArgs(v Bytes) *ParticipantBuilder {
-	s.unlock_args = v
-	return s
-}
-
-func (s *ParticipantBuilder) PaymentArgs(v Bytes) *ParticipantBuilder {
-	s.payment_args = v
+func (s *ParticipantBuilder) UnlockScriptHash(v Byte32) *ParticipantBuilder {
+	s.unlock_script_hash = v
 	return s
 }
 
@@ -1530,7 +1521,7 @@ func (s *ParticipantBuilder) PubKey(v SEC1EncodedPubKey) *ParticipantBuilder {
 }
 
 func NewParticipantBuilder() *ParticipantBuilder {
-	return &ParticipantBuilder{payment_lock_hash: Byte32Default(), payment_min_capacity: Uint64Default(), unlock_args: BytesDefault(), payment_args: BytesDefault(), pub_key: SEC1EncodedPubKeyDefault()}
+	return &ParticipantBuilder{payment_script_hash: Byte32Default(), payment_min_capacity: Uint64Default(), unlock_script_hash: Byte32Default(), pub_key: SEC1EncodedPubKeyDefault()}
 }
 
 type Participant struct {
@@ -1545,7 +1536,7 @@ func (s *Participant) AsSlice() []byte {
 }
 
 func ParticipantDefault() Participant {
-	return *ParticipantFromSliceUnchecked([]byte{137, 0, 0, 0, 24, 0, 0, 0, 56, 0, 0, 0, 64, 0, 0, 0, 68, 0, 0, 0, 72, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *ParticipantFromSliceUnchecked([]byte{157, 0, 0, 0, 20, 0, 0, 0, 52, 0, 0, 0, 60, 0, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func ParticipantFromSlice(slice []byte, compatible bool) (*Participant, error) {
@@ -1578,9 +1569,9 @@ func ParticipantFromSlice(slice []byte, compatible bool) (*Participant, error) {
 	}
 
 	fieldCount := uint32(offsetFirst)/HeaderSizeUint - 1
-	if fieldCount < 5 {
+	if fieldCount < 4 {
 		return nil, errors.New("FieldCountNotMatch")
-	} else if !compatible && fieldCount > 5 {
+	} else if !compatible && fieldCount > 4 {
 		return nil, errors.New("FieldCountNotMatch")
 	}
 
@@ -1609,17 +1600,12 @@ func ParticipantFromSlice(slice []byte, compatible bool) (*Participant, error) {
 		return nil, err
 	}
 
-	_, err = BytesFromSlice(slice[offsets[2]:offsets[3]], compatible)
+	_, err = Byte32FromSlice(slice[offsets[2]:offsets[3]], compatible)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = BytesFromSlice(slice[offsets[3]:offsets[4]], compatible)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = SEC1EncodedPubKeyFromSlice(slice[offsets[4]:offsets[5]], compatible)
+	_, err = SEC1EncodedPubKeyFromSlice(slice[offsets[3]:offsets[4]], compatible)
 	if err != nil {
 		return nil, err
 	}
@@ -1645,14 +1631,14 @@ func (s *Participant) IsEmpty() bool {
 	return s.Len() == 0
 }
 func (s *Participant) CountExtraFields() uint {
-	return s.FieldCount() - 5
+	return s.FieldCount() - 4
 }
 
 func (s *Participant) HasExtraFields() bool {
-	return 5 != s.FieldCount()
+	return 4 != s.FieldCount()
 }
 
-func (s *Participant) PaymentLockHash() *Byte32 {
+func (s *Participant) PaymentScriptHash() *Byte32 {
 	start := unpackNumber(s.inner[4:])
 	end := unpackNumber(s.inner[8:])
 	return Byte32FromSliceUnchecked(s.inner[start:end])
@@ -1664,23 +1650,17 @@ func (s *Participant) PaymentMinCapacity() *Uint64 {
 	return Uint64FromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *Participant) UnlockArgs() *Bytes {
+func (s *Participant) UnlockScriptHash() *Byte32 {
 	start := unpackNumber(s.inner[12:])
 	end := unpackNumber(s.inner[16:])
-	return BytesFromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *Participant) PaymentArgs() *Bytes {
-	start := unpackNumber(s.inner[16:])
-	end := unpackNumber(s.inner[20:])
-	return BytesFromSliceUnchecked(s.inner[start:end])
+	return Byte32FromSliceUnchecked(s.inner[start:end])
 }
 
 func (s *Participant) PubKey() *SEC1EncodedPubKey {
 	var ret *SEC1EncodedPubKey
-	start := unpackNumber(s.inner[20:])
+	start := unpackNumber(s.inner[16:])
 	if s.HasExtraFields() {
-		end := unpackNumber(s.inner[24:])
+		end := unpackNumber(s.inner[20:])
 		ret = SEC1EncodedPubKeyFromSliceUnchecked(s.inner[start:end])
 	} else {
 		ret = SEC1EncodedPubKeyFromSliceUnchecked(s.inner[start:])
@@ -1689,7 +1669,7 @@ func (s *Participant) PubKey() *SEC1EncodedPubKey {
 }
 
 func (s *Participant) AsBuilder() ParticipantBuilder {
-	ret := NewParticipantBuilder().PaymentLockHash(*s.PaymentLockHash()).PaymentMinCapacity(*s.PaymentMinCapacity()).UnlockArgs(*s.UnlockArgs()).PaymentArgs(*s.PaymentArgs()).PubKey(*s.PubKey())
+	ret := NewParticipantBuilder().PaymentScriptHash(*s.PaymentScriptHash()).PaymentMinCapacity(*s.PaymentMinCapacity()).UnlockScriptHash(*s.UnlockScriptHash()).PubKey(*s.PubKey())
 	return *ret
 }
 
@@ -1791,7 +1771,7 @@ func (s *ChannelParameters) AsSlice() []byte {
 }
 
 func ChannelParametersDefault() ChannelParameters {
-	return *ChannelParametersFromSliceUnchecked([]byte{100, 1, 0, 0, 32, 0, 0, 0, 169, 0, 0, 0, 50, 1, 0, 0, 82, 1, 0, 0, 90, 1, 0, 0, 90, 1, 0, 0, 95, 1, 0, 0, 137, 0, 0, 0, 24, 0, 0, 0, 56, 0, 0, 0, 64, 0, 0, 0, 68, 0, 0, 0, 72, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 137, 0, 0, 0, 24, 0, 0, 0, 56, 0, 0, 0, 64, 0, 0, 0, 68, 0, 0, 0, 72, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *ChannelParametersFromSliceUnchecked([]byte{140, 1, 0, 0, 32, 0, 0, 0, 189, 0, 0, 0, 90, 1, 0, 0, 122, 1, 0, 0, 130, 1, 0, 0, 130, 1, 0, 0, 135, 1, 0, 0, 157, 0, 0, 0, 20, 0, 0, 0, 52, 0, 0, 0, 60, 0, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 157, 0, 0, 0, 20, 0, 0, 0, 52, 0, 0, 0, 60, 0, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func ChannelParametersFromSlice(slice []byte, compatible bool) (*ChannelParameters, error) {
@@ -1962,30 +1942,33 @@ func (s *ChannelParameters) AsBuilder() ChannelParametersBuilder {
 }
 
 type ChannelConstantsBuilder struct {
-	params                  ChannelParameters
-	pfls_hash               Byte32
-	pfls_min_capacity       Uint64
-	pcls_hash               Byte32
-	pcls_unlock_script_hash Byte32
-	thread_token            ChannelToken
+	params            ChannelParameters
+	pfls_code_hash    Byte32
+	pfls_hash_type    Byte
+	pfls_min_capacity Uint64
+	pcls_code_hash    Byte32
+	pcls_hash_type    Byte
+	thread_token      ChannelToken
 }
 
 func (s *ChannelConstantsBuilder) Build() ChannelConstants {
 	b := new(bytes.Buffer)
 
-	totalSize := HeaderSizeUint * (6 + 1)
-	offsets := make([]uint32, 0, 6)
+	totalSize := HeaderSizeUint * (7 + 1)
+	offsets := make([]uint32, 0, 7)
 
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.params.AsSlice()))
 	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.pfls_hash.AsSlice()))
+	totalSize += uint32(len(s.pfls_code_hash.AsSlice()))
+	offsets = append(offsets, totalSize)
+	totalSize += uint32(len(s.pfls_hash_type.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.pfls_min_capacity.AsSlice()))
 	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.pcls_hash.AsSlice()))
+	totalSize += uint32(len(s.pcls_code_hash.AsSlice()))
 	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.pcls_unlock_script_hash.AsSlice()))
+	totalSize += uint32(len(s.pcls_hash_type.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.thread_token.AsSlice()))
 
@@ -1996,10 +1979,11 @@ func (s *ChannelConstantsBuilder) Build() ChannelConstants {
 	}
 
 	b.Write(s.params.AsSlice())
-	b.Write(s.pfls_hash.AsSlice())
+	b.Write(s.pfls_code_hash.AsSlice())
+	b.Write(s.pfls_hash_type.AsSlice())
 	b.Write(s.pfls_min_capacity.AsSlice())
-	b.Write(s.pcls_hash.AsSlice())
-	b.Write(s.pcls_unlock_script_hash.AsSlice())
+	b.Write(s.pcls_code_hash.AsSlice())
+	b.Write(s.pcls_hash_type.AsSlice())
 	b.Write(s.thread_token.AsSlice())
 	return ChannelConstants{inner: b.Bytes()}
 }
@@ -2009,8 +1993,13 @@ func (s *ChannelConstantsBuilder) Params(v ChannelParameters) *ChannelConstantsB
 	return s
 }
 
-func (s *ChannelConstantsBuilder) PflsHash(v Byte32) *ChannelConstantsBuilder {
-	s.pfls_hash = v
+func (s *ChannelConstantsBuilder) PflsCodeHash(v Byte32) *ChannelConstantsBuilder {
+	s.pfls_code_hash = v
+	return s
+}
+
+func (s *ChannelConstantsBuilder) PflsHashType(v Byte) *ChannelConstantsBuilder {
+	s.pfls_hash_type = v
 	return s
 }
 
@@ -2019,13 +2008,13 @@ func (s *ChannelConstantsBuilder) PflsMinCapacity(v Uint64) *ChannelConstantsBui
 	return s
 }
 
-func (s *ChannelConstantsBuilder) PclsHash(v Byte32) *ChannelConstantsBuilder {
-	s.pcls_hash = v
+func (s *ChannelConstantsBuilder) PclsCodeHash(v Byte32) *ChannelConstantsBuilder {
+	s.pcls_code_hash = v
 	return s
 }
 
-func (s *ChannelConstantsBuilder) PclsUnlockScriptHash(v Byte32) *ChannelConstantsBuilder {
-	s.pcls_unlock_script_hash = v
+func (s *ChannelConstantsBuilder) PclsHashType(v Byte) *ChannelConstantsBuilder {
+	s.pcls_hash_type = v
 	return s
 }
 
@@ -2035,7 +2024,7 @@ func (s *ChannelConstantsBuilder) ThreadToken(v ChannelToken) *ChannelConstantsB
 }
 
 func NewChannelConstantsBuilder() *ChannelConstantsBuilder {
-	return &ChannelConstantsBuilder{params: ChannelParametersDefault(), pfls_hash: Byte32Default(), pfls_min_capacity: Uint64Default(), pcls_hash: Byte32Default(), pcls_unlock_script_hash: Byte32Default(), thread_token: ChannelTokenDefault()}
+	return &ChannelConstantsBuilder{params: ChannelParametersDefault(), pfls_code_hash: Byte32Default(), pfls_hash_type: ByteDefault(), pfls_min_capacity: Uint64Default(), pcls_code_hash: Byte32Default(), pcls_hash_type: ByteDefault(), thread_token: ChannelTokenDefault()}
 }
 
 type ChannelConstants struct {
@@ -2050,7 +2039,7 @@ func (s *ChannelConstants) AsSlice() []byte {
 }
 
 func ChannelConstantsDefault() ChannelConstants {
-	return *ChannelConstantsFromSliceUnchecked([]byte{12, 2, 0, 0, 28, 0, 0, 0, 128, 1, 0, 0, 160, 1, 0, 0, 168, 1, 0, 0, 200, 1, 0, 0, 232, 1, 0, 0, 100, 1, 0, 0, 32, 0, 0, 0, 169, 0, 0, 0, 50, 1, 0, 0, 82, 1, 0, 0, 90, 1, 0, 0, 90, 1, 0, 0, 95, 1, 0, 0, 137, 0, 0, 0, 24, 0, 0, 0, 56, 0, 0, 0, 64, 0, 0, 0, 68, 0, 0, 0, 72, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 137, 0, 0, 0, 24, 0, 0, 0, 56, 0, 0, 0, 64, 0, 0, 0, 68, 0, 0, 0, 72, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *ChannelConstantsFromSliceUnchecked([]byte{26, 2, 0, 0, 32, 0, 0, 0, 172, 1, 0, 0, 204, 1, 0, 0, 205, 1, 0, 0, 213, 1, 0, 0, 245, 1, 0, 0, 246, 1, 0, 0, 140, 1, 0, 0, 32, 0, 0, 0, 189, 0, 0, 0, 90, 1, 0, 0, 122, 1, 0, 0, 130, 1, 0, 0, 130, 1, 0, 0, 135, 1, 0, 0, 157, 0, 0, 0, 20, 0, 0, 0, 52, 0, 0, 0, 60, 0, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 157, 0, 0, 0, 20, 0, 0, 0, 52, 0, 0, 0, 60, 0, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func ChannelConstantsFromSlice(slice []byte, compatible bool) (*ChannelConstants, error) {
@@ -2083,9 +2072,9 @@ func ChannelConstantsFromSlice(slice []byte, compatible bool) (*ChannelConstants
 	}
 
 	fieldCount := uint32(offsetFirst)/HeaderSizeUint - 1
-	if fieldCount < 6 {
+	if fieldCount < 7 {
 		return nil, errors.New("FieldCountNotMatch")
-	} else if !compatible && fieldCount > 6 {
+	} else if !compatible && fieldCount > 7 {
 		return nil, errors.New("FieldCountNotMatch")
 	}
 
@@ -2114,12 +2103,12 @@ func ChannelConstantsFromSlice(slice []byte, compatible bool) (*ChannelConstants
 		return nil, err
 	}
 
-	_, err = Uint64FromSlice(slice[offsets[2]:offsets[3]], compatible)
+	_, err = ByteFromSlice(slice[offsets[2]:offsets[3]], compatible)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = Byte32FromSlice(slice[offsets[3]:offsets[4]], compatible)
+	_, err = Uint64FromSlice(slice[offsets[3]:offsets[4]], compatible)
 	if err != nil {
 		return nil, err
 	}
@@ -2129,7 +2118,12 @@ func ChannelConstantsFromSlice(slice []byte, compatible bool) (*ChannelConstants
 		return nil, err
 	}
 
-	_, err = ChannelTokenFromSlice(slice[offsets[5]:offsets[6]], compatible)
+	_, err = ByteFromSlice(slice[offsets[5]:offsets[6]], compatible)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = ChannelTokenFromSlice(slice[offsets[6]:offsets[7]], compatible)
 	if err != nil {
 		return nil, err
 	}
@@ -2155,11 +2149,11 @@ func (s *ChannelConstants) IsEmpty() bool {
 	return s.Len() == 0
 }
 func (s *ChannelConstants) CountExtraFields() uint {
-	return s.FieldCount() - 6
+	return s.FieldCount() - 7
 }
 
 func (s *ChannelConstants) HasExtraFields() bool {
-	return 6 != s.FieldCount()
+	return 7 != s.FieldCount()
 }
 
 func (s *ChannelConstants) Params() *ChannelParameters {
@@ -2168,35 +2162,41 @@ func (s *ChannelConstants) Params() *ChannelParameters {
 	return ChannelParametersFromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ChannelConstants) PflsHash() *Byte32 {
+func (s *ChannelConstants) PflsCodeHash() *Byte32 {
 	start := unpackNumber(s.inner[8:])
 	end := unpackNumber(s.inner[12:])
 	return Byte32FromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ChannelConstants) PflsMinCapacity() *Uint64 {
+func (s *ChannelConstants) PflsHashType() *Byte {
 	start := unpackNumber(s.inner[12:])
 	end := unpackNumber(s.inner[16:])
+	return ByteFromSliceUnchecked(s.inner[start:end])
+}
+
+func (s *ChannelConstants) PflsMinCapacity() *Uint64 {
+	start := unpackNumber(s.inner[16:])
+	end := unpackNumber(s.inner[20:])
 	return Uint64FromSliceUnchecked(s.inner[start:end])
 }
 
-func (s *ChannelConstants) PclsHash() *Byte32 {
-	start := unpackNumber(s.inner[16:])
-	end := unpackNumber(s.inner[20:])
-	return Byte32FromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *ChannelConstants) PclsUnlockScriptHash() *Byte32 {
+func (s *ChannelConstants) PclsCodeHash() *Byte32 {
 	start := unpackNumber(s.inner[20:])
 	end := unpackNumber(s.inner[24:])
 	return Byte32FromSliceUnchecked(s.inner[start:end])
 }
 
+func (s *ChannelConstants) PclsHashType() *Byte {
+	start := unpackNumber(s.inner[24:])
+	end := unpackNumber(s.inner[28:])
+	return ByteFromSliceUnchecked(s.inner[start:end])
+}
+
 func (s *ChannelConstants) ThreadToken() *ChannelToken {
 	var ret *ChannelToken
-	start := unpackNumber(s.inner[24:])
+	start := unpackNumber(s.inner[28:])
 	if s.HasExtraFields() {
-		end := unpackNumber(s.inner[28:])
+		end := unpackNumber(s.inner[32:])
 		ret = ChannelTokenFromSliceUnchecked(s.inner[start:end])
 	} else {
 		ret = ChannelTokenFromSliceUnchecked(s.inner[start:])
@@ -2205,7 +2205,7 @@ func (s *ChannelConstants) ThreadToken() *ChannelToken {
 }
 
 func (s *ChannelConstants) AsBuilder() ChannelConstantsBuilder {
-	ret := NewChannelConstantsBuilder().Params(*s.Params()).PflsHash(*s.PflsHash()).PflsMinCapacity(*s.PflsMinCapacity()).PclsHash(*s.PclsHash()).PclsUnlockScriptHash(*s.PclsUnlockScriptHash()).ThreadToken(*s.ThreadToken())
+	ret := NewChannelConstantsBuilder().Params(*s.Params()).PflsCodeHash(*s.PflsCodeHash()).PflsHashType(*s.PflsHashType()).PflsMinCapacity(*s.PflsMinCapacity()).PclsCodeHash(*s.PclsCodeHash()).PclsHashType(*s.PclsHashType()).ThreadToken(*s.ThreadToken())
 	return *ret
 }
 
@@ -3528,70 +3528,5 @@ func (s *ChannelToken) OutPoint() *OutPoint {
 
 func (s *ChannelToken) AsBuilder() ChannelTokenBuilder {
 	ret := NewChannelTokenBuilder().OutPoint(*s.OutPoint())
-	return *ret
-}
-
-type PFLSArgsBuilder struct {
-	pcts_hash    Byte32
-	thread_token ChannelToken
-}
-
-func (s *PFLSArgsBuilder) Build() PFLSArgs {
-	b := new(bytes.Buffer)
-	b.Write(s.pcts_hash.AsSlice())
-	b.Write(s.thread_token.AsSlice())
-	return PFLSArgs{inner: b.Bytes()}
-}
-
-func (s *PFLSArgsBuilder) PctsHash(v Byte32) *PFLSArgsBuilder {
-	s.pcts_hash = v
-	return s
-}
-
-func (s *PFLSArgsBuilder) ThreadToken(v ChannelToken) *PFLSArgsBuilder {
-	s.thread_token = v
-	return s
-}
-
-func NewPFLSArgsBuilder() *PFLSArgsBuilder {
-	return &PFLSArgsBuilder{pcts_hash: Byte32Default(), thread_token: ChannelTokenDefault()}
-}
-
-type PFLSArgs struct {
-	inner []byte
-}
-
-func PFLSArgsFromSliceUnchecked(slice []byte) *PFLSArgs {
-	return &PFLSArgs{inner: slice}
-}
-func (s *PFLSArgs) AsSlice() []byte {
-	return s.inner
-}
-
-func PFLSArgsDefault() PFLSArgs {
-	return *PFLSArgsFromSliceUnchecked([]byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
-}
-
-func PFLSArgsFromSlice(slice []byte, _compatible bool) (*PFLSArgs, error) {
-	sliceLen := len(slice)
-	if sliceLen != 68 {
-		errMsg := strings.Join([]string{"TotalSizeNotMatch", "PFLSArgs", strconv.Itoa(int(sliceLen)), "!=", strconv.Itoa(68)}, " ")
-		return nil, errors.New(errMsg)
-	}
-	return &PFLSArgs{inner: slice}, nil
-}
-
-func (s *PFLSArgs) PctsHash() *Byte32 {
-	ret := Byte32FromSliceUnchecked(s.inner[0:32])
-	return ret
-}
-
-func (s *PFLSArgs) ThreadToken() *ChannelToken {
-	ret := ChannelTokenFromSliceUnchecked(s.inner[32:68])
-	return ret
-}
-
-func (s *PFLSArgs) AsBuilder() PFLSArgsBuilder {
-	ret := NewPFLSArgsBuilder().PctsHash(*s.PctsHash()).ThreadToken(*s.ThreadToken())
 	return *ret
 }
