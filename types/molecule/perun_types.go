@@ -781,11 +781,11 @@ func (s *SEC1EncodedPubKey) AsBuilder() SEC1EncodedPubKeyBuilder {
 }
 
 type BalancesBuilder struct {
-	inner [2]Uint128
+	inner [2]Uint64
 }
 
 func NewBalancesBuilder() *BalancesBuilder {
-	return &BalancesBuilder{inner: [2]Uint128{Uint128Default(), Uint128Default()}}
+	return &BalancesBuilder{inner: [2]Uint64{Uint64Default(), Uint64Default()}}
 }
 
 func (s *BalancesBuilder) Build() Balances {
@@ -797,17 +797,17 @@ func (s *BalancesBuilder) Build() Balances {
 	return Balances{inner: b.Bytes()}
 }
 
-func (s *BalancesBuilder) Set(v [2]Uint128) *BalancesBuilder {
+func (s *BalancesBuilder) Set(v [2]Uint64) *BalancesBuilder {
 	s.inner = v
 	return s
 }
 
-func (s *BalancesBuilder) Nth0(v Uint128) *BalancesBuilder {
+func (s *BalancesBuilder) Nth0(v Uint64) *BalancesBuilder {
 	s.inner[0] = v
 	return s
 }
 
-func (s *BalancesBuilder) Nth1(v Uint128) *BalancesBuilder {
+func (s *BalancesBuilder) Nth1(v Uint64) *BalancesBuilder {
 	s.inner[1] = v
 	return s
 }
@@ -824,25 +824,25 @@ func (s *Balances) AsSlice() []byte {
 }
 
 func BalancesDefault() Balances {
-	return *BalancesFromSliceUnchecked([]byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *BalancesFromSliceUnchecked([]byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func BalancesFromSlice(slice []byte, _compatible bool) (*Balances, error) {
 	sliceLen := len(slice)
-	if sliceLen != 32 {
-		errMsg := strings.Join([]string{"TotalSizeNotMatch", "Balances", strconv.Itoa(int(sliceLen)), "!=", strconv.Itoa(32)}, " ")
+	if sliceLen != 16 {
+		errMsg := strings.Join([]string{"TotalSizeNotMatch", "Balances", strconv.Itoa(int(sliceLen)), "!=", strconv.Itoa(16)}, " ")
 		return nil, errors.New(errMsg)
 	}
 	return &Balances{inner: slice}, nil
 }
 
-func (s *Balances) Nth0() *Uint128 {
-	ret := Uint128FromSliceUnchecked(s.inner[0:16])
+func (s *Balances) Nth0() *Uint64 {
+	ret := Uint64FromSliceUnchecked(s.inner[0:8])
 	return ret
 }
 
-func (s *Balances) Nth1() *Uint128 {
-	ret := Uint128FromSliceUnchecked(s.inner[16:32])
+func (s *Balances) Nth1() *Uint64 {
+	ret := Uint64FromSliceUnchecked(s.inner[8:16])
 	return ret
 }
 
@@ -2653,7 +2653,7 @@ func (s *Close) AsSlice() []byte {
 }
 
 func CloseDefault() Close {
-	return *CloseFromSliceUnchecked([]byte{121, 0, 0, 0, 16, 0, 0, 0, 113, 0, 0, 0, 117, 0, 0, 0, 97, 0, 0, 0, 20, 0, 0, 0, 52, 0, 0, 0, 84, 0, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *CloseFromSliceUnchecked([]byte{105, 0, 0, 0, 16, 0, 0, 0, 97, 0, 0, 0, 101, 0, 0, 0, 81, 0, 0, 0, 20, 0, 0, 0, 52, 0, 0, 0, 68, 0, 0, 0, 76, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func CloseFromSlice(slice []byte, compatible bool) (*Close, error) {
@@ -3133,7 +3133,7 @@ func (s *ChannelState) AsSlice() []byte {
 }
 
 func ChannelStateDefault() ChannelState {
-	return *ChannelStateFromSliceUnchecked([]byte{97, 0, 0, 0, 20, 0, 0, 0, 52, 0, 0, 0, 84, 0, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *ChannelStateFromSliceUnchecked([]byte{81, 0, 0, 0, 20, 0, 0, 0, 52, 0, 0, 0, 68, 0, 0, 0, 76, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func ChannelStateFromSlice(slice []byte, compatible bool) (*ChannelState, error) {
@@ -3341,7 +3341,7 @@ func (s *ChannelStatus) AsSlice() []byte {
 }
 
 func ChannelStatusDefault() ChannelStatus {
-	return *ChannelStatusFromSliceUnchecked([]byte{159, 0, 0, 0, 20, 0, 0, 0, 117, 0, 0, 0, 122, 0, 0, 0, 154, 0, 0, 0, 97, 0, 0, 0, 20, 0, 0, 0, 52, 0, 0, 0, 84, 0, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *ChannelStatusFromSliceUnchecked([]byte{127, 0, 0, 0, 20, 0, 0, 0, 101, 0, 0, 0, 106, 0, 0, 0, 122, 0, 0, 0, 81, 0, 0, 0, 20, 0, 0, 0, 52, 0, 0, 0, 68, 0, 0, 0, 76, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func ChannelStatusFromSlice(slice []byte, compatible bool) (*ChannelStatus, error) {
