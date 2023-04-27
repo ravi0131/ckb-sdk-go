@@ -11,11 +11,11 @@ import (
 )
 
 type SEC1EncodedPubKeyBuilder struct {
-	inner [65]Byte
+	inner [33]Byte
 }
 
 func NewSEC1EncodedPubKeyBuilder() *SEC1EncodedPubKeyBuilder {
-	return &SEC1EncodedPubKeyBuilder{inner: [65]Byte{ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault()}}
+	return &SEC1EncodedPubKeyBuilder{inner: [33]Byte{ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault(), ByteDefault()}}
 }
 
 func (s *SEC1EncodedPubKeyBuilder) Build() SEC1EncodedPubKey {
@@ -27,7 +27,7 @@ func (s *SEC1EncodedPubKeyBuilder) Build() SEC1EncodedPubKey {
 	return SEC1EncodedPubKey{inner: b.Bytes()}
 }
 
-func (s *SEC1EncodedPubKeyBuilder) Set(v [65]Byte) *SEC1EncodedPubKeyBuilder {
+func (s *SEC1EncodedPubKeyBuilder) Set(v [33]Byte) *SEC1EncodedPubKeyBuilder {
 	s.inner = v
 	return s
 }
@@ -197,166 +197,6 @@ func (s *SEC1EncodedPubKeyBuilder) Nth32(v Byte) *SEC1EncodedPubKeyBuilder {
 	return s
 }
 
-func (s *SEC1EncodedPubKeyBuilder) Nth33(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[33] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth34(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[34] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth35(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[35] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth36(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[36] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth37(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[37] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth38(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[38] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth39(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[39] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth40(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[40] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth41(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[41] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth42(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[42] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth43(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[43] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth44(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[44] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth45(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[45] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth46(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[46] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth47(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[47] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth48(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[48] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth49(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[49] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth50(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[50] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth51(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[51] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth52(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[52] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth53(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[53] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth54(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[54] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth55(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[55] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth56(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[56] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth57(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[57] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth58(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[58] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth59(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[59] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth60(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[60] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth61(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[61] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth62(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[62] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth63(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[63] = v
-	return s
-}
-
-func (s *SEC1EncodedPubKeyBuilder) Nth64(v Byte) *SEC1EncodedPubKeyBuilder {
-	s.inner[64] = v
-	return s
-}
-
 type SEC1EncodedPubKey struct {
 	inner []byte
 }
@@ -369,13 +209,13 @@ func (s *SEC1EncodedPubKey) AsSlice() []byte {
 }
 
 func SEC1EncodedPubKeyDefault() SEC1EncodedPubKey {
-	return *SEC1EncodedPubKeyFromSliceUnchecked([]byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *SEC1EncodedPubKeyFromSliceUnchecked([]byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func SEC1EncodedPubKeyFromSlice(slice []byte, _compatible bool) (*SEC1EncodedPubKey, error) {
 	sliceLen := len(slice)
-	if sliceLen != 65 {
-		errMsg := strings.Join([]string{"TotalSizeNotMatch", "SEC1EncodedPubKey", strconv.Itoa(int(sliceLen)), "!=", strconv.Itoa(65)}, " ")
+	if sliceLen != 33 {
+		errMsg := strings.Join([]string{"TotalSizeNotMatch", "SEC1EncodedPubKey", strconv.Itoa(int(sliceLen)), "!=", strconv.Itoa(33)}, " ")
 		return nil, errors.New(errMsg)
 	}
 	return &SEC1EncodedPubKey{inner: slice}, nil
@@ -550,166 +390,6 @@ func (s *SEC1EncodedPubKey) Nth32() *Byte {
 	return ret
 }
 
-func (s *SEC1EncodedPubKey) Nth33() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[33:34])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth34() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[34:35])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth35() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[35:36])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth36() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[36:37])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth37() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[37:38])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth38() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[38:39])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth39() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[39:40])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth40() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[40:41])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth41() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[41:42])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth42() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[42:43])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth43() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[43:44])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth44() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[44:45])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth45() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[45:46])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth46() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[46:47])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth47() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[47:48])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth48() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[48:49])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth49() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[49:50])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth50() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[50:51])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth51() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[51:52])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth52() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[52:53])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth53() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[53:54])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth54() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[54:55])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth55() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[55:56])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth56() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[56:57])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth57() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[57:58])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth58() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[58:59])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth59() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[59:60])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth60() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[60:61])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth61() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[61:62])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth62() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[62:63])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth63() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[63:64])
-	return ret
-}
-
-func (s *SEC1EncodedPubKey) Nth64() *Byte {
-	ret := ByteFromSliceUnchecked(s.inner[64:65])
-	return ret
-}
-
 func (s *SEC1EncodedPubKey) AsBuilder() SEC1EncodedPubKeyBuilder {
 	t := NewSEC1EncodedPubKeyBuilder()
 	t.Nth0(*s.Nth0())
@@ -745,38 +425,6 @@ func (s *SEC1EncodedPubKey) AsBuilder() SEC1EncodedPubKeyBuilder {
 	t.Nth30(*s.Nth30())
 	t.Nth31(*s.Nth31())
 	t.Nth32(*s.Nth32())
-	t.Nth33(*s.Nth33())
-	t.Nth34(*s.Nth34())
-	t.Nth35(*s.Nth35())
-	t.Nth36(*s.Nth36())
-	t.Nth37(*s.Nth37())
-	t.Nth38(*s.Nth38())
-	t.Nth39(*s.Nth39())
-	t.Nth40(*s.Nth40())
-	t.Nth41(*s.Nth41())
-	t.Nth42(*s.Nth42())
-	t.Nth43(*s.Nth43())
-	t.Nth44(*s.Nth44())
-	t.Nth45(*s.Nth45())
-	t.Nth46(*s.Nth46())
-	t.Nth47(*s.Nth47())
-	t.Nth48(*s.Nth48())
-	t.Nth49(*s.Nth49())
-	t.Nth50(*s.Nth50())
-	t.Nth51(*s.Nth51())
-	t.Nth52(*s.Nth52())
-	t.Nth53(*s.Nth53())
-	t.Nth54(*s.Nth54())
-	t.Nth55(*s.Nth55())
-	t.Nth56(*s.Nth56())
-	t.Nth57(*s.Nth57())
-	t.Nth58(*s.Nth58())
-	t.Nth59(*s.Nth59())
-	t.Nth60(*s.Nth60())
-	t.Nth61(*s.Nth61())
-	t.Nth62(*s.Nth62())
-	t.Nth63(*s.Nth63())
-	t.Nth64(*s.Nth64())
 	return *t
 }
 
@@ -1536,7 +1184,7 @@ func (s *Participant) AsSlice() []byte {
 }
 
 func ParticipantDefault() Participant {
-	return *ParticipantFromSliceUnchecked([]byte{157, 0, 0, 0, 20, 0, 0, 0, 52, 0, 0, 0, 60, 0, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *ParticipantFromSliceUnchecked([]byte{125, 0, 0, 0, 20, 0, 0, 0, 52, 0, 0, 0, 60, 0, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func ParticipantFromSlice(slice []byte, compatible bool) (*Participant, error) {
@@ -1771,7 +1419,7 @@ func (s *ChannelParameters) AsSlice() []byte {
 }
 
 func ChannelParametersDefault() ChannelParameters {
-	return *ChannelParametersFromSliceUnchecked([]byte{140, 1, 0, 0, 32, 0, 0, 0, 189, 0, 0, 0, 90, 1, 0, 0, 122, 1, 0, 0, 130, 1, 0, 0, 130, 1, 0, 0, 135, 1, 0, 0, 157, 0, 0, 0, 20, 0, 0, 0, 52, 0, 0, 0, 60, 0, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 157, 0, 0, 0, 20, 0, 0, 0, 52, 0, 0, 0, 60, 0, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *ChannelParametersFromSliceUnchecked([]byte{76, 1, 0, 0, 32, 0, 0, 0, 157, 0, 0, 0, 26, 1, 0, 0, 58, 1, 0, 0, 66, 1, 0, 0, 66, 1, 0, 0, 71, 1, 0, 0, 125, 0, 0, 0, 20, 0, 0, 0, 52, 0, 0, 0, 60, 0, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 125, 0, 0, 0, 20, 0, 0, 0, 52, 0, 0, 0, 60, 0, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func ChannelParametersFromSlice(slice []byte, compatible bool) (*ChannelParameters, error) {
@@ -2039,7 +1687,7 @@ func (s *ChannelConstants) AsSlice() []byte {
 }
 
 func ChannelConstantsDefault() ChannelConstants {
-	return *ChannelConstantsFromSliceUnchecked([]byte{26, 2, 0, 0, 32, 0, 0, 0, 172, 1, 0, 0, 204, 1, 0, 0, 205, 1, 0, 0, 213, 1, 0, 0, 245, 1, 0, 0, 246, 1, 0, 0, 140, 1, 0, 0, 32, 0, 0, 0, 189, 0, 0, 0, 90, 1, 0, 0, 122, 1, 0, 0, 130, 1, 0, 0, 130, 1, 0, 0, 135, 1, 0, 0, 157, 0, 0, 0, 20, 0, 0, 0, 52, 0, 0, 0, 60, 0, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 157, 0, 0, 0, 20, 0, 0, 0, 52, 0, 0, 0, 60, 0, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *ChannelConstantsFromSliceUnchecked([]byte{218, 1, 0, 0, 32, 0, 0, 0, 108, 1, 0, 0, 140, 1, 0, 0, 141, 1, 0, 0, 149, 1, 0, 0, 181, 1, 0, 0, 182, 1, 0, 0, 76, 1, 0, 0, 32, 0, 0, 0, 157, 0, 0, 0, 26, 1, 0, 0, 58, 1, 0, 0, 66, 1, 0, 0, 66, 1, 0, 0, 71, 1, 0, 0, 125, 0, 0, 0, 20, 0, 0, 0, 52, 0, 0, 0, 60, 0, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 125, 0, 0, 0, 20, 0, 0, 0, 52, 0, 0, 0, 60, 0, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func ChannelConstantsFromSlice(slice []byte, compatible bool) (*ChannelConstants, error) {
