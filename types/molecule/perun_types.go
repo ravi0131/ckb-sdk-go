@@ -904,145 +904,6 @@ func (s *B) AsBuilder() BBuilder {
 	return *t
 }
 
-type ParticipantIndexBuilder struct {
-	inner ParticipantIndexUnion
-}
-
-func NewParticipantIndexBuilder() *ParticipantIndexBuilder {
-	v := ParticipantIndexDefault()
-	return &ParticipantIndexBuilder{inner: *v.ToUnion()}
-}
-func (s *ParticipantIndexBuilder) Set(v ParticipantIndexUnion) *ParticipantIndexBuilder {
-	s.inner = v
-	return s
-}
-func (s *ParticipantIndexBuilder) Build() ParticipantIndex {
-	b := new(bytes.Buffer)
-	b.Write(packNumber(s.inner.itemID))
-	b.Write(s.inner.AsSlice())
-
-	return ParticipantIndex{inner: b.Bytes()}
-}
-
-type ParticipantIndex struct {
-	inner []byte
-}
-
-func ParticipantIndexFromSliceUnchecked(slice []byte) *ParticipantIndex {
-	return &ParticipantIndex{inner: slice}
-}
-func (s *ParticipantIndex) AsSlice() []byte {
-	return s.inner
-}
-
-func ParticipantIndexDefault() ParticipantIndex {
-	return *ParticipantIndexFromSliceUnchecked([]byte{0, 0, 0, 0, 0})
-}
-
-type ParticipantIndexUnion struct {
-	itemID Number
-	inner  []byte
-}
-
-func (s *ParticipantIndexUnion) AsSlice() []byte {
-	return s.inner
-}
-func (s *ParticipantIndexUnion) ItemID() Number {
-	return s.itemID
-}
-
-func ParticipantIndexUnionFromA(v A) ParticipantIndexUnion {
-	return ParticipantIndexUnion{itemID: 0, inner: v.AsSlice()}
-}
-
-func (s *ParticipantIndexUnion) IntoA() *A {
-	switch s.ItemID() {
-	case 0:
-		return AFromSliceUnchecked(s.AsSlice())
-	default:
-		errMsg := strings.Join([]string{"invalid item_id: expect 0, found", strconv.Itoa(int(s.ItemID()))}, " ")
-		panic(errMsg)
-	}
-}
-
-func ParticipantIndexUnionFromB(v B) ParticipantIndexUnion {
-	return ParticipantIndexUnion{itemID: 1, inner: v.AsSlice()}
-}
-
-func (s *ParticipantIndexUnion) IntoB() *B {
-	switch s.ItemID() {
-	case 1:
-		return BFromSliceUnchecked(s.AsSlice())
-	default:
-		errMsg := strings.Join([]string{"invalid item_id: expect 1, found", strconv.Itoa(int(s.ItemID()))}, " ")
-		panic(errMsg)
-	}
-}
-
-func (s *ParticipantIndexUnion) ItemName() string {
-	switch s.itemID {
-
-	case 0:
-		return "A"
-
-	case 1:
-		return "B"
-
-	default:
-		panic("invalid data: ParticipantIndexUnion")
-	}
-}
-
-func (s *ParticipantIndex) ToUnion() *ParticipantIndexUnion {
-	switch s.ItemID() {
-
-	case 0:
-		return &ParticipantIndexUnion{itemID: 0, inner: s.inner[HeaderSizeUint:]}
-
-	case 1:
-		return &ParticipantIndexUnion{itemID: 1, inner: s.inner[HeaderSizeUint:]}
-
-	default:
-		panic("invalid data: ParticipantIndex")
-	}
-}
-
-func ParticipantIndexFromSlice(slice []byte, compatible bool) (*ParticipantIndex, error) {
-	sliceLen := len(slice)
-	if uint32(sliceLen) < HeaderSizeUint {
-		errMsg := strings.Join([]string{"HeaderIsBroken", "ParticipantIndex", strconv.Itoa(int(sliceLen)), "<", strconv.Itoa(int(HeaderSizeUint))}, " ")
-		return nil, errors.New(errMsg)
-	}
-	itemID := unpackNumber(slice)
-	innerSlice := slice[HeaderSizeUint:]
-
-	switch itemID {
-
-	case 0:
-		_, err := AFromSlice(innerSlice, compatible)
-		if err != nil {
-			return nil, err
-		}
-
-	case 1:
-		_, err := BFromSlice(innerSlice, compatible)
-		if err != nil {
-			return nil, err
-		}
-
-	default:
-		return nil, errors.New("UnknownItem, ParticipantIndex")
-	}
-	return &ParticipantIndex{inner: slice}, nil
-}
-
-func (s *ParticipantIndex) ItemID() Number {
-	return unpackNumber(s.inner)
-}
-func (s *ParticipantIndex) AsBuilder() ParticipantIndexBuilder {
-	return *NewParticipantIndexBuilder().Set(*s.ToUnion())
-}
-
 type AppBuilder struct {
 	isNone bool
 	inner  Bytes
@@ -1858,35 +1719,30 @@ func (s *ChannelConstants) AsBuilder() ChannelConstantsBuilder {
 }
 
 type FundBuilder struct {
-	index ParticipantIndex
+	inner [1]Byte
+}
+
+func NewFundBuilder() *FundBuilder {
+	return &FundBuilder{inner: [1]Byte{ByteDefault()}}
 }
 
 func (s *FundBuilder) Build() Fund {
 	b := new(bytes.Buffer)
-
-	totalSize := HeaderSizeUint * (1 + 1)
-	offsets := make([]uint32, 0, 1)
-
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.index.AsSlice()))
-
-	b.Write(packNumber(Number(totalSize)))
-
-	for i := 0; i < len(offsets); i++ {
-		b.Write(packNumber(Number(offsets[i])))
+	len := len(s.inner)
+	for i := 0; i < len; i++ {
+		b.Write(s.inner[i].AsSlice())
 	}
-
-	b.Write(s.index.AsSlice())
 	return Fund{inner: b.Bytes()}
 }
 
-func (s *FundBuilder) Index(v ParticipantIndex) *FundBuilder {
-	s.index = v
+func (s *FundBuilder) Set(v [1]Byte) *FundBuilder {
+	s.inner = v
 	return s
 }
 
-func NewFundBuilder() *FundBuilder {
-	return &FundBuilder{index: ParticipantIndexDefault()}
+func (s *FundBuilder) Nth0(v Byte) *FundBuilder {
+	s.inner[0] = v
+	return s
 }
 
 type Fund struct {
@@ -1901,108 +1757,31 @@ func (s *Fund) AsSlice() []byte {
 }
 
 func FundDefault() Fund {
-	return *FundFromSliceUnchecked([]byte{13, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *FundFromSliceUnchecked([]byte{0})
 }
 
-func FundFromSlice(slice []byte, compatible bool) (*Fund, error) {
+func FundFromSlice(slice []byte, _compatible bool) (*Fund, error) {
 	sliceLen := len(slice)
-	if uint32(sliceLen) < HeaderSizeUint {
-		errMsg := strings.Join([]string{"HeaderIsBroken", "Fund", strconv.Itoa(int(sliceLen)), "<", strconv.Itoa(int(HeaderSizeUint))}, " ")
+	if sliceLen != 1 {
+		errMsg := strings.Join([]string{"TotalSizeNotMatch", "Fund", strconv.Itoa(int(sliceLen)), "!=", strconv.Itoa(1)}, " ")
 		return nil, errors.New(errMsg)
 	}
-
-	totalSize := unpackNumber(slice)
-	if Number(sliceLen) != totalSize {
-		errMsg := strings.Join([]string{"TotalSizeNotMatch", "Fund", strconv.Itoa(int(sliceLen)), "!=", strconv.Itoa(int(totalSize))}, " ")
-		return nil, errors.New(errMsg)
-	}
-
-	if uint32(sliceLen) < HeaderSizeUint*2 {
-		errMsg := strings.Join([]string{"TotalSizeNotMatch", "Fund", strconv.Itoa(int(sliceLen)), "<", strconv.Itoa(int(HeaderSizeUint * 2))}, " ")
-		return nil, errors.New(errMsg)
-	}
-
-	offsetFirst := unpackNumber(slice[HeaderSizeUint:])
-	if uint32(offsetFirst)%HeaderSizeUint != 0 || uint32(offsetFirst) < HeaderSizeUint*2 {
-		errMsg := strings.Join([]string{"OffsetsNotMatch", "Fund", strconv.Itoa(int(offsetFirst % 4)), "!= 0", strconv.Itoa(int(offsetFirst)), "<", strconv.Itoa(int(HeaderSizeUint * 2))}, " ")
-		return nil, errors.New(errMsg)
-	}
-
-	if sliceLen < int(offsetFirst) {
-		errMsg := strings.Join([]string{"HeaderIsBroken", "Fund", strconv.Itoa(int(sliceLen)), "<", strconv.Itoa(int(offsetFirst))}, " ")
-		return nil, errors.New(errMsg)
-	}
-
-	fieldCount := uint32(offsetFirst)/HeaderSizeUint - 1
-	if fieldCount < 1 {
-		return nil, errors.New("FieldCountNotMatch")
-	} else if !compatible && fieldCount > 1 {
-		return nil, errors.New("FieldCountNotMatch")
-	}
-
-	offsets := make([]uint32, fieldCount)
-
-	for i := 0; i < int(fieldCount); i++ {
-		offsets[i] = uint32(unpackNumber(slice[HeaderSizeUint:][int(HeaderSizeUint)*i:]))
-	}
-	offsets = append(offsets, uint32(totalSize))
-
-	for i := 0; i < len(offsets); i++ {
-		if i&1 != 0 && offsets[i-1] > offsets[i] {
-			return nil, errors.New("OffsetsNotMatch")
-		}
-	}
-
-	var err error
-
-	_, err = ParticipantIndexFromSlice(slice[offsets[0]:offsets[1]], compatible)
-	if err != nil {
-		return nil, err
-	}
-
 	return &Fund{inner: slice}, nil
 }
 
-func (s *Fund) TotalSize() uint {
-	return uint(unpackNumber(s.inner))
-}
-func (s *Fund) FieldCount() uint {
-	var number uint = 0
-	if uint32(s.TotalSize()) == HeaderSizeUint {
-		return number
-	}
-	number = uint(unpackNumber(s.inner[HeaderSizeUint:]))/4 - 1
-	return number
-}
-func (s *Fund) Len() uint {
-	return s.FieldCount()
-}
-func (s *Fund) IsEmpty() bool {
-	return s.Len() == 0
-}
-func (s *Fund) CountExtraFields() uint {
-	return s.FieldCount() - 1
+func (s *Fund) RawData() []byte {
+	return s.inner
 }
 
-func (s *Fund) HasExtraFields() bool {
-	return 1 != s.FieldCount()
-}
-
-func (s *Fund) Index() *ParticipantIndex {
-	var ret *ParticipantIndex
-	start := unpackNumber(s.inner[4:])
-	if s.HasExtraFields() {
-		end := unpackNumber(s.inner[8:])
-		ret = ParticipantIndexFromSliceUnchecked(s.inner[start:end])
-	} else {
-		ret = ParticipantIndexFromSliceUnchecked(s.inner[start:])
-	}
+func (s *Fund) Nth0() *Byte {
+	ret := ByteFromSliceUnchecked(s.inner[0:1])
 	return ret
 }
 
 func (s *Fund) AsBuilder() FundBuilder {
-	ret := NewFundBuilder().Index(*s.Index())
-	return *ret
+	t := NewFundBuilder()
+	t.Nth0(*s.Nth0())
+	return *t
 }
 
 type AbortBuilder struct {
@@ -2525,7 +2304,7 @@ func (s *ChannelWitness) AsSlice() []byte {
 }
 
 func ChannelWitnessDefault() ChannelWitness {
-	return *ChannelWitnessFromSliceUnchecked([]byte{0, 0, 0, 0, 13, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *ChannelWitnessFromSliceUnchecked([]byte{0, 0, 0, 0, 0})
 }
 
 type ChannelWitnessUnion struct {
