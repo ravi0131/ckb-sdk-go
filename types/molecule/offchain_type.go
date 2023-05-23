@@ -8,17 +8,16 @@ import (
 )
 
 type OffChainParticipantBuilder struct {
-	pub_key              SEC1EncodedPubKey
-	payment_script       Script
-	unlock_script        Script
-	payment_min_capacity Uint64
+	pub_key        SEC1EncodedPubKey
+	payment_script Script
+	unlock_script  Script
 }
 
 func (s *OffChainParticipantBuilder) Build() OffChainParticipant {
 	b := new(bytes.Buffer)
 
-	totalSize := HeaderSizeUint * (4 + 1)
-	offsets := make([]uint32, 0, 4)
+	totalSize := HeaderSizeUint * (3 + 1)
+	offsets := make([]uint32, 0, 3)
 
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.pub_key.AsSlice()))
@@ -26,8 +25,6 @@ func (s *OffChainParticipantBuilder) Build() OffChainParticipant {
 	totalSize += uint32(len(s.payment_script.AsSlice()))
 	offsets = append(offsets, totalSize)
 	totalSize += uint32(len(s.unlock_script.AsSlice()))
-	offsets = append(offsets, totalSize)
-	totalSize += uint32(len(s.payment_min_capacity.AsSlice()))
 
 	b.Write(packNumber(Number(totalSize)))
 
@@ -38,7 +35,6 @@ func (s *OffChainParticipantBuilder) Build() OffChainParticipant {
 	b.Write(s.pub_key.AsSlice())
 	b.Write(s.payment_script.AsSlice())
 	b.Write(s.unlock_script.AsSlice())
-	b.Write(s.payment_min_capacity.AsSlice())
 	return OffChainParticipant{inner: b.Bytes()}
 }
 
@@ -57,13 +53,8 @@ func (s *OffChainParticipantBuilder) UnlockScript(v Script) *OffChainParticipant
 	return s
 }
 
-func (s *OffChainParticipantBuilder) PaymentMinCapacity(v Uint64) *OffChainParticipantBuilder {
-	s.payment_min_capacity = v
-	return s
-}
-
 func NewOffChainParticipantBuilder() *OffChainParticipantBuilder {
-	return &OffChainParticipantBuilder{pub_key: SEC1EncodedPubKeyDefault(), payment_script: ScriptDefault(), unlock_script: ScriptDefault(), payment_min_capacity: Uint64Default()}
+	return &OffChainParticipantBuilder{pub_key: SEC1EncodedPubKeyDefault(), payment_script: ScriptDefault(), unlock_script: ScriptDefault()}
 }
 
 type OffChainParticipant struct {
@@ -78,7 +69,7 @@ func (s *OffChainParticipant) AsSlice() []byte {
 }
 
 func OffChainParticipantDefault() OffChainParticipant {
-	return *OffChainParticipantFromSliceUnchecked([]byte{167, 0, 0, 0, 20, 0, 0, 0, 53, 0, 0, 0, 106, 0, 0, 0, 159, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	return *OffChainParticipantFromSliceUnchecked([]byte{155, 0, 0, 0, 16, 0, 0, 0, 49, 0, 0, 0, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 0, 0, 0, 16, 0, 0, 0, 48, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func OffChainParticipantFromSlice(slice []byte, compatible bool) (*OffChainParticipant, error) {
@@ -111,9 +102,9 @@ func OffChainParticipantFromSlice(slice []byte, compatible bool) (*OffChainParti
 	}
 
 	fieldCount := uint32(offsetFirst)/HeaderSizeUint - 1
-	if fieldCount < 4 {
+	if fieldCount < 3 {
 		return nil, errors.New("FieldCountNotMatch")
-	} else if !compatible && fieldCount > 4 {
+	} else if !compatible && fieldCount > 3 {
 		return nil, errors.New("FieldCountNotMatch")
 	}
 
@@ -147,11 +138,6 @@ func OffChainParticipantFromSlice(slice []byte, compatible bool) (*OffChainParti
 		return nil, err
 	}
 
-	_, err = Uint64FromSlice(slice[offsets[3]:offsets[4]], compatible)
-	if err != nil {
-		return nil, err
-	}
-
 	return &OffChainParticipant{inner: slice}, nil
 }
 
@@ -173,11 +159,11 @@ func (s *OffChainParticipant) IsEmpty() bool {
 	return s.Len() == 0
 }
 func (s *OffChainParticipant) CountExtraFields() uint {
-	return s.FieldCount() - 4
+	return s.FieldCount() - 3
 }
 
 func (s *OffChainParticipant) HasExtraFields() bool {
-	return 4 != s.FieldCount()
+	return 3 != s.FieldCount()
 }
 
 func (s *OffChainParticipant) PubKey() *SEC1EncodedPubKey {
@@ -193,24 +179,18 @@ func (s *OffChainParticipant) PaymentScript() *Script {
 }
 
 func (s *OffChainParticipant) UnlockScript() *Script {
+	var ret *Script
 	start := unpackNumber(s.inner[12:])
-	end := unpackNumber(s.inner[16:])
-	return ScriptFromSliceUnchecked(s.inner[start:end])
-}
-
-func (s *OffChainParticipant) PaymentMinCapacity() *Uint64 {
-	var ret *Uint64
-	start := unpackNumber(s.inner[16:])
 	if s.HasExtraFields() {
-		end := unpackNumber(s.inner[20:])
-		ret = Uint64FromSliceUnchecked(s.inner[start:end])
+		end := unpackNumber(s.inner[16:])
+		ret = ScriptFromSliceUnchecked(s.inner[start:end])
 	} else {
-		ret = Uint64FromSliceUnchecked(s.inner[start:])
+		ret = ScriptFromSliceUnchecked(s.inner[start:])
 	}
 	return ret
 }
 
 func (s *OffChainParticipant) AsBuilder() OffChainParticipantBuilder {
-	ret := NewOffChainParticipantBuilder().PubKey(*s.PubKey()).PaymentScript(*s.PaymentScript()).UnlockScript(*s.UnlockScript()).PaymentMinCapacity(*s.PaymentMinCapacity())
+	ret := NewOffChainParticipantBuilder().PubKey(*s.PubKey()).PaymentScript(*s.PaymentScript()).UnlockScript(*s.UnlockScript())
 	return *ret
 }
