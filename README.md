@@ -112,7 +112,7 @@ scriptGroups := []*transaction.ScriptGroup{
 			HashType: types.HashTypeType,
 			Args:     common.FromHex("0x3f1573b44218d4c12a91919a58a863be415a2bc3"),
 		},
-		GroupType:    transaction.ScriptTypeLock,
+		GroupType:    types.ScriptTypeLock,
 		InputIndices: []uint32{0},
 	},
 }
