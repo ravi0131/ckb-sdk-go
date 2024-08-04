@@ -98,8 +98,11 @@ type Client interface {
 	// Note that the given block is included in the median time. The included block number range is [MAX(block - 36, 0), block].
 	GetBlockMedianTime(ctx context.Context, blockHash types.Hash) (uint64, error)
 
-	// GetFeeRateStatics Returns the fee_rate statistics of confirmed blocks on the chain
+	// Deprecated: use GetFeeRateStatistics instead
 	GetFeeRateStatics(ctx context.Context, target interface{}) (*types.FeeRateStatics, error)
+
+	// GetFeeRateStatistics Returns the fee_rate statistics of confirmed blocks on the chain
+	GetFeeRateStatistics(ctx context.Context, target interface{}) (*types.FeeRateStatistics, error)
 
 	////// Experiment
 	// DryRunTransaction dry run transaction and return the execution cycles.
@@ -535,15 +538,19 @@ func (cli *client) GetBlockMedianTime(ctx context.Context, blockHash types.Hash)
 }
 
 func (cli *client) GetFeeRateStatics(ctx context.Context, target interface{}) (*types.FeeRateStatics, error) {
-	var result types.FeeRateStatics
+	return cli.GetFeeRateStatistics(ctx, target)
+}
+
+func (cli *client) GetFeeRateStatistics(ctx context.Context, target interface{}) (*types.FeeRateStatistics, error) {
+	var result types.FeeRateStatistics
 	switch target := target.(type) {
 	case nil:
-		if err := cli.c.CallContext(ctx, &result, "get_fee_rate_statics", nil); err != nil {
+		if err := cli.c.CallContext(ctx, &result, "get_fee_rate_statistics", nil); err != nil {
 			return nil, err
 		}
 		break
 	case uint64:
-		if err := cli.c.CallContext(ctx, &result, "get_fee_rate_statics", hexutil.Uint64(target)); err != nil {
+		if err := cli.c.CallContext(ctx, &result, "get_fee_rate_statistics", hexutil.Uint64(target)); err != nil {
 			return nil, err
 		}
 		break

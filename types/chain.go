@@ -326,10 +326,13 @@ type EstimateCycles struct {
 	Cycles uint64 `json:"cycles"`
 }
 
-type FeeRateStatics struct {
+type FeeRateStatistics struct {
 	Mean   uint64 `json:"mean"`
 	Median uint64 `json:"median"`
 }
+
+// Deprecated: Use FeeRateStatistics instead
+type FeeRateStatics = FeeRateStatistics
 
 type TransactionAndWitnessProof struct {
 	BlockHash         Hash   `json:"block_hash"`

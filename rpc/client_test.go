@@ -488,10 +488,10 @@ func TestGetTransactionsGrouped(t *testing.T) {
 }
 
 func TestClient_GetFeeRateStatics(t *testing.T) {
-	statics, err := testClient.GetFeeRateStatics(context.Background(), nil)
+	statics, err := testClient.GetFeeRateStatistics(context.Background(), nil)
 	assert.NoError(t, err)
 	assert.NotNil(t, statics)
-	statics2, err := testClient.GetFeeRateStatics(context.Background(), 1)
+	statics2, err := testClient.GetFeeRateStatistics(context.Background(), 1)
 	assert.NoError(t, err)
 	assert.NotNil(t, statics2)
 }
