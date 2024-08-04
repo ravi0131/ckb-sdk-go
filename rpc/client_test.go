@@ -99,7 +99,7 @@ func TestClient_GetBlockWithCycles(t *testing.T) {
 
 func TestClient_GetTransaction(t *testing.T) {
 	txView, err := testClient.GetTransaction(ctx,
-		types.HexToHash("0x8277d74d33850581f8d843613ded0c2a1722dec0e87e748f45c115dfb14210f1"))
+		types.HexToHash("0x8277d74d33850581f8d843613ded0c2a1722dec0e87e748f45c115dfb14210f1"), nil)
 	assert.NoError(t, err)
 	tx := txView.Transaction
 	status := txView.TxStatus

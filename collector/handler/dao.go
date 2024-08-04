@@ -102,7 +102,7 @@ type ClaimInfo struct {
 }
 
 func NewClaimInfo(client rpc.Client, withdrawOutpoint *types.OutPoint) (*ClaimInfo, error) {
-	txWithStatus, err := client.GetTransaction(context.Background(), withdrawOutpoint.TxHash)
+	txWithStatus, err := client.GetTransaction(context.Background(), withdrawOutpoint.TxHash, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -111,7 +111,7 @@ func NewClaimInfo(client rpc.Client, withdrawOutpoint *types.OutPoint) (*ClaimIn
 	var depositBlockHash types.Hash
 	for i := 0; i < len(withdrawTx.Inputs); i++ {
 		outPoint := withdrawTx.Inputs[i].PreviousOutput
-		txWithStatus, err := client.GetTransaction(context.Background(), outPoint.TxHash)
+		txWithStatus, err := client.GetTransaction(context.Background(), outPoint.TxHash, nil)
 		if err != nil {
 			return nil, err
 		}
@@ -175,7 +175,7 @@ type WithdrawInfo struct {
 }
 
 func NewWithdrawInfo(client rpc.Client, depositOutPoint *types.OutPoint) (*WithdrawInfo, error) {
-	txWithStatus, err := client.GetTransaction(context.Background(), depositOutPoint.TxHash)
+	txWithStatus, err := client.GetTransaction(context.Background(), depositOutPoint.TxHash, nil)
 	if err != nil {
 		return nil, err
 	}

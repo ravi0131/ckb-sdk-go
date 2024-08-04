@@ -64,7 +64,7 @@ type Client interface {
 	GetLiveCell(ctx context.Context, outPoint *types.OutPoint, withData bool) (*types.CellWithStatus, error)
 
 	// GetTransaction returns the information about a transaction requested by transaction hash.
-	GetTransaction(ctx context.Context, hash types.Hash) (*types.TransactionWithStatus, error)
+	GetTransaction(ctx context.Context, hash types.Hash, only_committed *bool) (*types.TransactionWithStatus, error)
 
 	// GetBlockEconomicState return block economic state, It includes the rewards details and when it is finalized.
 	GetBlockEconomicState(ctx context.Context, hash types.Hash) (*types.BlockEconomicState, error)
@@ -446,9 +446,14 @@ func (cli *client) GetLiveCell(ctx context.Context, point *types.OutPoint, withD
 	return &result, err
 }
 
-func (cli *client) GetTransaction(ctx context.Context, hash types.Hash) (*types.TransactionWithStatus, error) {
+func (cli *client) GetTransaction(ctx context.Context, hash types.Hash, only_committed *bool) (*types.TransactionWithStatus, error) {
 	var result types.TransactionWithStatus
-	err := cli.c.CallContext(ctx, &result, "get_transaction", hash)
+	var err error
+	if only_committed == nil {
+		err = cli.c.CallContext(ctx, &result, "get_transaction", hash)
+	} else {
+		err = cli.c.CallContext(ctx, &result, "get_transaction", hash, *only_committed)
+	}
 	if err != nil {
 		return nil, err
 	}
