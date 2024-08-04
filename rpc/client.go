@@ -186,6 +186,9 @@ type Client interface {
 	//GetCellsCapacity returns the live cells capacity by the lock or type script.
 	GetCellsCapacity(ctx context.Context, searchKey *indexer.SearchKey) (*indexer.Capacity, error)
 
+	// GetDeploymentsInfo returns statistics about the chain.
+	GetDeploymentsInfo(ctx context.Context) (*types.DeploymentsInfo, error)
+
 	// Close close client
 	Close()
 
@@ -758,6 +761,15 @@ func (cli *client) GetIndexerTip(ctx context.Context) (*indexer.TipHeader, error
 func (cli *client) GetCellsCapacity(ctx context.Context, searchKey *indexer.SearchKey) (*indexer.Capacity, error) {
 	var result indexer.Capacity
 	err := cli.c.CallContext(ctx, &result, "get_cells_capacity", searchKey)
+	if err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (cli *client) GetDeploymentsInfo(ctx context.Context) (*types.DeploymentsInfo, error) {
+	var result types.DeploymentsInfo
+	err := cli.c.CallContext(ctx, &result, "get_deployments_info")
 	if err != nil {
 		return nil, err
 	}
