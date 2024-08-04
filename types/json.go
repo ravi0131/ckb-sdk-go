@@ -357,10 +357,10 @@ func (r *Consensus) UnmarshalJSON(input []byte) error {
 	if err := json.Unmarshal(input, &jsonObj); err != nil {
 		return err
 	}
-	toHardForkFeatureArray := func(a []*jsonHardForkFeature) []*HardForkFeature {
-		result := make([]*HardForkFeature, len(a))
-		for i, data := range a {
-			result[i] = &HardForkFeature{
+	toHardForkFeatureArray := func(a []*jsonHardForkFeature) HardForkFeatures {
+		result := make(map[string]*HardForkFeature)
+		for _, data := range a {
+			result[data.Rfc] = &HardForkFeature{
 				Rfc:         data.Rfc,
 				EpochNumber: (*uint64)(data.EpochNumber),
 			}
