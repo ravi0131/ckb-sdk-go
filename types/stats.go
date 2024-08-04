@@ -51,7 +51,7 @@ type DeploymentInfo struct {
 	Timeout            uint64
 	MinActivationEpoch uint64
 	Period             uint64
-	Threshold          RationalU256
+	Threshold          jsonRationalU256
 	Since              uint64
 	State              DeploymentState
 }
