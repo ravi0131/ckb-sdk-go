@@ -239,6 +239,8 @@ type TxStatus struct {
 type TransactionWithStatus struct {
 	Transaction     *Transaction `json:"transaction"`
 	Cycles          *uint64      `json:"cycles"`
+	Fee             *uint64      `json:"fee"`
+	MinReplaceFee   *uint64      `json:"min_replace_fee"`
 	TimeAddedToPool *uint64      `json:"time_added_to_pool"`
 	TxStatus        *TxStatus    `json:"tx_status"`
 }
