@@ -29,7 +29,7 @@ type DaoTransactionBuilder struct {
 }
 
 func NewDaoTransactionBuilder(network types.Network, iterator collector.CellIterator, daoOutPoint *types.OutPoint, client rpc.Client) (*DaoTransactionBuilder, error) {
-	cellWithStatus, err := client.GetLiveCell(context.Background(), daoOutPoint, true)
+	cellWithStatus, err := client.GetLiveCell(context.Background(), daoOutPoint, true, nil)
 	if err != nil {
 		return nil, err
 	}

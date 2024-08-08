@@ -61,7 +61,7 @@ type Client interface {
 	GetPackedHeaderByNumber(ctx context.Context, number uint64) (*types.Header, error)
 	// GetLiveCell returns the information about a cell by out_point if it is live.
 	// If second with_data argument set to true, will return cell data and data_hash if it is live.
-	GetLiveCell(ctx context.Context, outPoint *types.OutPoint, withData bool) (*types.CellWithStatus, error)
+	GetLiveCell(ctx context.Context, outPoint *types.OutPoint, withData bool, include_tx_pool *bool) (*types.CellWithStatus, error)
 
 	// GetTransaction returns the information about a transaction requested by transaction hash.
 	GetTransaction(ctx context.Context, hash types.Hash, only_committed *bool) (*types.TransactionWithStatus, error)
@@ -446,7 +446,7 @@ func (cli *client) VerifyTransactionAndWitnessProof(ctx context.Context, proof *
 	return result, err
 }
 
-func (cli *client) GetLiveCell(ctx context.Context, point *types.OutPoint, withData bool) (*types.CellWithStatus, error) {
+func (cli *client) GetLiveCell(ctx context.Context, point *types.OutPoint, withData bool, include_tx_pool *bool) (*types.CellWithStatus, error) {
 	var result types.CellWithStatus
 	err := cli.c.CallContext(ctx, &result, "get_live_cell", *point, withData)
 	if err != nil {

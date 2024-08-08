@@ -395,7 +395,7 @@ func TestClient_GetLiveCell(t *testing.T) {
 		TxHash: types.HexToHash("0xf8de3bb47d055cdf460d93a2a6e1b05f7432f9777c8c474abf4eec1d4aee5d37"),
 		Index:  0,
 	}
-	cellWithStatus, err := testClient.GetLiveCell(ctx, &outPoint, true)
+	cellWithStatus, err := testClient.GetLiveCell(ctx, &outPoint, true, nil)
 	if err != nil {
 		t.Fatal(err)
 	}

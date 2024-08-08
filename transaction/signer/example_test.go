@@ -17,7 +17,7 @@ type CapacityDiffContext struct {
 }
 
 func (ctx CapacityDiffContext) getInputCell(outPoint *types.OutPoint) (*types.CellOutput, error) {
-	cellWithStatus, err := ctx.rpc.GetLiveCell(ctx.ctx, outPoint, false)
+	cellWithStatus, err := ctx.rpc.GetLiveCell(ctx.ctx, outPoint, false, nil)
 	if err != nil {
 		return nil, err
 	}
