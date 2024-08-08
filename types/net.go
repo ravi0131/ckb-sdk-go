@@ -54,12 +54,16 @@ type BannedAddress struct {
 }
 
 type SyncState struct {
-	Ibd                     bool   `json:"ibd"`
-	BestKnownBlockNumber    uint64 `json:"best_known_block_number"`
-	BestKnownBlockTimestamp uint64 `json:"best_known_block_timestamp"`
-	OrphanBlocksCount       uint64 `json:"orphan_blocks_count"`
-	InflightBlocksCount     uint64 `json:"inflight_blocks_count"`
-	FastTime                uint64 `json:"fast_time"`
-	LowTime                 uint64 `json:"low_time"`
-	NormalTime              uint64 `json:"normal_time"`
+	Ibd                      bool   `json:"ibd"`
+	BestKnownBlockNumber     uint64 `json:"best_known_block_number"`
+	BestKnownBlockTimestamp  uint64 `json:"best_known_block_timestamp"`
+	OrphanBlocksCount        uint64 `json:"orphan_blocks_count"`
+	InflightBlocksCount      uint64 `json:"inflight_blocks_count"`
+	AssumeValidTarget        Hash   `json:"assume_valid_target"`
+	AssumeValidTargetReached bool   `json:"assume_valid_target_reached"`
+	MinChainWork             uint64 `json:"min_chain_work"`
+	MinChainWorkReached      bool   `json:"min_chain_work_reached"`
+	FastTime                 uint64 `json:"fast_time"`
+	LowTime                  uint64 `json:"low_time"`
+	NormalTime               uint64 `json:"normal_time"`
 }
