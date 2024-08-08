@@ -155,6 +155,8 @@ type Client interface {
 	// TxPoolInfo return the transaction pool information
 	TxPoolInfo(ctx context.Context) (*types.TxPoolInfo, error)
 
+	GetPoolTxDetailInfo(ctx context.Context, hash types.Hash) (*types.PoolTxDetailInfo, error)
+
 	// GetRawTxPool Returns all transaction ids in tx pool as a json array of string transaction ids.
 	GetRawTxPool(ctx context.Context) (*types.RawTxPool, error)
 
@@ -667,6 +669,15 @@ func (cli *client) SendTransaction(ctx context.Context, tx *types.Transaction) (
 	}
 
 	return &result, err
+}
+
+func (cli *client) GetPoolTxDetailInfo(ctx context.Context, hash types.Hash) (*types.PoolTxDetailInfo, error) {
+	var result types.PoolTxDetailInfo
+	err := cli.c.CallContext(ctx, &result, "get_pool_tx_detail", hash)
+	if err != nil {
+		return nil, err
+	}
+	return &result, nil
 }
 
 func (cli *client) TxPoolInfo(ctx context.Context) (*types.TxPoolInfo, error) {
