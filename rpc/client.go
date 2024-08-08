@@ -152,6 +152,10 @@ type Client interface {
 	// SendTransaction send new transaction into transaction pool.
 	SendTransaction(ctx context.Context, tx *types.Transaction) (*types.Hash, error)
 
+	/// Test if a transaction can be accepted by the transaction pool without inserting it into the pool or rebroadcasting it to peers.
+	/// The parameters and errors of this method are the same as `send_transaction`.
+	TestTxPoolAccept(ctx context.Context, tx *types.Transaction) (*types.EntryCompleted, error)
+
 	// TxPoolInfo return the transaction pool information
 	TxPoolInfo(ctx context.Context) (*types.TxPoolInfo, error)
 
@@ -669,6 +673,17 @@ func (cli *client) SendTransaction(ctx context.Context, tx *types.Transaction) (
 	}
 
 	return &result, err
+}
+
+// TestTxPoolAccept(ctx context.Context, tx *types.Transaction) (*types.EntryCompleted, error)
+func (cli *client) TestTxPoolAccept(ctx context.Context, tx *types.Transaction) (*types.EntryCompleted, error) {
+	var result types.EntryCompleted
+
+	err := cli.c.CallContext(ctx, &result, "test_tx_pool_accept", *tx, "passthrough")
+	if err != nil {
+		return nil, err
+	}
+	return &result, nil
 }
 
 func (cli *client) GetPoolTxDetailInfo(ctx context.Context, hash types.Hash) (*types.PoolTxDetailInfo, error) {

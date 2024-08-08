@@ -34,3 +34,10 @@ type PoolTxDetailInfo struct {
 	ScoreSortKey     AncestorsScoreSortKey `json:"score_sortkey"`
 	Timestamp        uint64                `json:"timestamp"`
 }
+
+type EntryCompleted struct {
+	// Cached tx cycles
+	cycles uint64 `json:"cycles"`
+	// Cached tx fee
+	fee uint64 `json:"fee"`
+}
