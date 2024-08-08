@@ -189,6 +189,9 @@ type Client interface {
 	// GetDeploymentsInfo returns statistics about the chain.
 	GetDeploymentsInfo(ctx context.Context) (*types.DeploymentsInfo, error)
 
+	// GenerateEpochs generate epochs
+	GenerateEpochs(ctx context.Context, num_epochs uint64) (uint64, error)
+
 	// Close close client
 	Close()
 
@@ -846,4 +849,13 @@ func (cli *client) GetBlockEconomicState(ctx context.Context, blockHash types.Ha
 		return nil, nil
 	}
 	return &result, nil
+}
+
+func (cli *client) GenerateEpochs(ctx context.Context, num_epochs uint64) (uint64, error) {
+	var result hexutil.Uint64
+	err := cli.c.CallContext(ctx, &result, "generate_epochs", hexutil.Uint64(num_epochs))
+	if err != nil {
+		return 0, err
+	}
+	return uint64(result), nil
 }
