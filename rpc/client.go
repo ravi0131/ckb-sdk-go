@@ -61,10 +61,10 @@ type Client interface {
 	GetPackedHeaderByNumber(ctx context.Context, number uint64) (*types.Header, error)
 	// GetLiveCell returns the information about a cell by out_point if it is live.
 	// If second with_data argument set to true, will return cell data and data_hash if it is live.
-	GetLiveCell(ctx context.Context, outPoint *types.OutPoint, withData bool) (*types.CellWithStatus, error)
+	GetLiveCell(ctx context.Context, outPoint *types.OutPoint, withData bool, include_tx_pool *bool) (*types.CellWithStatus, error)
 
 	// GetTransaction returns the information about a transaction requested by transaction hash.
-	GetTransaction(ctx context.Context, hash types.Hash) (*types.TransactionWithStatus, error)
+	GetTransaction(ctx context.Context, hash types.Hash, only_committed *bool) (*types.TransactionWithStatus, error)
 
 	// GetBlockEconomicState return block economic state, It includes the rewards details and when it is finalized.
 	GetBlockEconomicState(ctx context.Context, hash types.Hash) (*types.BlockEconomicState, error)
@@ -98,8 +98,11 @@ type Client interface {
 	// Note that the given block is included in the median time. The included block number range is [MAX(block - 36, 0), block].
 	GetBlockMedianTime(ctx context.Context, blockHash types.Hash) (uint64, error)
 
-	// GetFeeRateStatics Returns the fee_rate statistics of confirmed blocks on the chain
+	// Deprecated: use GetFeeRateStatistics instead
 	GetFeeRateStatics(ctx context.Context, target interface{}) (*types.FeeRateStatics, error)
+
+	// GetFeeRateStatistics Returns the fee_rate statistics of confirmed blocks on the chain
+	GetFeeRateStatistics(ctx context.Context, target interface{}) (*types.FeeRateStatistics, error)
 
 	////// Experiment
 	// DryRunTransaction dry run transaction and return the execution cycles.
@@ -149,8 +152,14 @@ type Client interface {
 	// SendTransaction send new transaction into transaction pool.
 	SendTransaction(ctx context.Context, tx *types.Transaction) (*types.Hash, error)
 
+	/// Test if a transaction can be accepted by the transaction pool without inserting it into the pool or rebroadcasting it to peers.
+	/// The parameters and errors of this method are the same as `send_transaction`.
+	TestTxPoolAccept(ctx context.Context, tx *types.Transaction) (*types.EntryCompleted, error)
+
 	// TxPoolInfo return the transaction pool information
 	TxPoolInfo(ctx context.Context) (*types.TxPoolInfo, error)
+
+	GetPoolTxDetailInfo(ctx context.Context, hash types.Hash) (*types.PoolTxDetailInfo, error)
 
 	// GetRawTxPool Returns all transaction ids in tx pool as a json array of string transaction ids.
 	GetRawTxPool(ctx context.Context) (*types.RawTxPool, error)
@@ -182,6 +191,12 @@ type Client interface {
 
 	//GetCellsCapacity returns the live cells capacity by the lock or type script.
 	GetCellsCapacity(ctx context.Context, searchKey *indexer.SearchKey) (*indexer.Capacity, error)
+
+	// GetDeploymentsInfo returns statistics about the chain.
+	GetDeploymentsInfo(ctx context.Context) (*types.DeploymentsInfo, error)
+
+	// GenerateEpochs generate epochs
+	GenerateEpochs(ctx context.Context, num_epochs uint64) (uint64, error)
 
 	// Close close client
 	Close()
@@ -431,7 +446,7 @@ func (cli *client) VerifyTransactionAndWitnessProof(ctx context.Context, proof *
 	return result, err
 }
 
-func (cli *client) GetLiveCell(ctx context.Context, point *types.OutPoint, withData bool) (*types.CellWithStatus, error) {
+func (cli *client) GetLiveCell(ctx context.Context, point *types.OutPoint, withData bool, include_tx_pool *bool) (*types.CellWithStatus, error) {
 	var result types.CellWithStatus
 	err := cli.c.CallContext(ctx, &result, "get_live_cell", *point, withData)
 	if err != nil {
@@ -440,9 +455,14 @@ func (cli *client) GetLiveCell(ctx context.Context, point *types.OutPoint, withD
 	return &result, err
 }
 
-func (cli *client) GetTransaction(ctx context.Context, hash types.Hash) (*types.TransactionWithStatus, error) {
+func (cli *client) GetTransaction(ctx context.Context, hash types.Hash, only_committed *bool) (*types.TransactionWithStatus, error) {
 	var result types.TransactionWithStatus
-	err := cli.c.CallContext(ctx, &result, "get_transaction", hash)
+	var err error
+	if only_committed == nil {
+		err = cli.c.CallContext(ctx, &result, "get_transaction", hash)
+	} else {
+		err = cli.c.CallContext(ctx, &result, "get_transaction", hash, *only_committed)
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -535,15 +555,19 @@ func (cli *client) GetBlockMedianTime(ctx context.Context, blockHash types.Hash)
 }
 
 func (cli *client) GetFeeRateStatics(ctx context.Context, target interface{}) (*types.FeeRateStatics, error) {
-	var result types.FeeRateStatics
+	return cli.GetFeeRateStatistics(ctx, target)
+}
+
+func (cli *client) GetFeeRateStatistics(ctx context.Context, target interface{}) (*types.FeeRateStatistics, error) {
+	var result types.FeeRateStatistics
 	switch target := target.(type) {
 	case nil:
-		if err := cli.c.CallContext(ctx, &result, "get_fee_rate_statics", nil); err != nil {
+		if err := cli.c.CallContext(ctx, &result, "get_fee_rate_statistics", nil); err != nil {
 			return nil, err
 		}
 		break
 	case uint64:
-		if err := cli.c.CallContext(ctx, &result, "get_fee_rate_statics", hexutil.Uint64(target)); err != nil {
+		if err := cli.c.CallContext(ctx, &result, "get_fee_rate_statistics", hexutil.Uint64(target)); err != nil {
 			return nil, err
 		}
 		break
@@ -649,6 +673,26 @@ func (cli *client) SendTransaction(ctx context.Context, tx *types.Transaction) (
 	}
 
 	return &result, err
+}
+
+// TestTxPoolAccept(ctx context.Context, tx *types.Transaction) (*types.EntryCompleted, error)
+func (cli *client) TestTxPoolAccept(ctx context.Context, tx *types.Transaction) (*types.EntryCompleted, error) {
+	var result types.EntryCompleted
+
+	err := cli.c.CallContext(ctx, &result, "test_tx_pool_accept", *tx, "passthrough")
+	if err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (cli *client) GetPoolTxDetailInfo(ctx context.Context, hash types.Hash) (*types.PoolTxDetailInfo, error) {
+	var result types.PoolTxDetailInfo
+	err := cli.c.CallContext(ctx, &result, "get_pool_tx_detail", hash)
+	if err != nil {
+		return nil, err
+	}
+	return &result, nil
 }
 
 func (cli *client) TxPoolInfo(ctx context.Context) (*types.TxPoolInfo, error) {
@@ -757,6 +801,15 @@ func (cli *client) GetCellsCapacity(ctx context.Context, searchKey *indexer.Sear
 	return &result, nil
 }
 
+func (cli *client) GetDeploymentsInfo(ctx context.Context) (*types.DeploymentsInfo, error) {
+	var result types.DeploymentsInfo
+	err := cli.c.CallContext(ctx, &result, "get_deployments_info")
+	if err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
 func (cli *client) GetCells(ctx context.Context, searchKey *indexer.SearchKey, order indexer.SearchOrder, limit uint64, afterCursor string) (*indexer.LiveCells, error) {
 	var (
 		result indexer.LiveCells
@@ -822,4 +875,13 @@ func (cli *client) GetBlockEconomicState(ctx context.Context, blockHash types.Ha
 		return nil, nil
 	}
 	return &result, nil
+}
+
+func (cli *client) GenerateEpochs(ctx context.Context, num_epochs uint64) (uint64, error) {
+	var result hexutil.Uint64
+	err := cli.c.CallContext(ctx, &result, "generate_epochs", hexutil.Uint64(num_epochs))
+	if err != nil {
+		return 0, err
+	}
+	return uint64(result), nil
 }

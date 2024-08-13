@@ -33,7 +33,7 @@ func (c *DaoHelper) GetDaoDepositCellInfo(outpoint *types.OutPoint, withdrawBloc
 
 // GetDaoDepositCellInfoWithWithdrawOutpoint Get information for DAO cell deposited as outpoint and withdrawn in block where the withdrawCellOutPoint is
 func (c *DaoHelper) GetDaoDepositCellInfoWithWithdrawOutpoint(outpoint *types.OutPoint, withdrawCellOutPoint *types.OutPoint) (DaoDepositCellInfo, error) {
-	withdrawTransaction, err := c.Client.GetTransaction(context.Background(), withdrawCellOutPoint.TxHash)
+	withdrawTransaction, err := c.Client.GetTransaction(context.Background(), withdrawCellOutPoint.TxHash, nil)
 	if err != nil {
 		return DaoDepositCellInfo{}, err
 	}
@@ -51,7 +51,7 @@ func (c *DaoHelper) GetDaoDepositCellInfoByNow(outpoint *types.OutPoint) (DaoDep
 
 // getDaoDepositCellInfo Get information for DAO cell deposited as outpoint and withdrawn in withdrawBlock
 func (c *DaoHelper) getDaoDepositCellInfo(outpoint *types.OutPoint, withdrawBlockHeader *types.Header) (DaoDepositCellInfo, error) {
-	depositTransactionWithStatus, err := c.Client.GetTransaction(context.Background(), outpoint.TxHash)
+	depositTransactionWithStatus, err := c.Client.GetTransaction(context.Background(), outpoint.TxHash, nil)
 	if err != nil {
 		return DaoDepositCellInfo{}, err
 	}

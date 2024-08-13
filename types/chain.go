@@ -239,6 +239,8 @@ type TxStatus struct {
 type TransactionWithStatus struct {
 	Transaction     *Transaction `json:"transaction"`
 	Cycles          *uint64      `json:"cycles"`
+	Fee             *uint64      `json:"fee"`
+	MinReplaceFee   *uint64      `json:"min_replace_fee"`
 	TimeAddedToPool *uint64      `json:"time_added_to_pool"`
 	TxStatus        *TxStatus    `json:"tx_status"`
 }
@@ -281,30 +283,32 @@ type ProposalWindow struct {
 }
 
 type Consensus struct {
-	Id                                   string             `json:"ID"`
-	GenesisHash                          Hash               `json:"genesis_hash"`
-	DaoTypeHash                          *Hash              `json:"dao_type_hash"`
-	Secp256k1Blake160SighashAllTypeHash  *Hash              `json:"secp256k1_blake160_sighash_all_type_hash"`
-	Secp256k1Blake160MultisigAllTypeHash *Hash              `json:"secp256k1_blake160_multisig_all_type_hash"`
-	InitialPrimaryEpochReward            uint64             `json:"initial_primary_epoch_reward"`
-	SecondaryEpochReward                 uint64             `json:"secondary_epoch_reward"`
-	MaxUnclesNum                         uint64             `json:"max_uncles_num"`
-	OrphanRateTarget                     RationalU256       `json:"orphan_rate_target"`
-	EpochDurationTarget                  uint64             `json:"epoch_duration_target"`
-	TxProposalWindow                     ProposalWindow     `json:"tx_proposal_window"`
-	ProposerRewardRatio                  RationalU256       `json:"proposer_reward_ratio"`
-	CellbaseMaturity                     uint64             `json:"cellbase_maturity"`
-	MedianTimeBlockCount                 uint64             `json:"median_time_block_count"`
-	MaxBlockCycles                       uint64             `json:"max_block_cycles"`
-	MaxBlockBytes                        uint64             `json:"max_block_bytes"`
-	BlockVersion                         uint32             `json:"block_version"`
-	TxVersion                            uint32             `json:"tx_version"`
-	TypeIdCodeHash                       Hash               `json:"type_id_code_hash"`
-	MaxBlockProposalsLimit               uint64             `json:"max_block_proposals_limit"`
-	PrimaryEpochRewardHalvingInterval    uint64             `json:"primary_epoch_reward_halving_interval"`
-	PermanentDifficultyInDummy           bool               `json:"permanent_difficulty_in_dummy"`
-	HardforkFeatures                     []*HardForkFeature `json:"hardfork_features"`
+	Id                                   string           `json:"ID"`
+	GenesisHash                          Hash             `json:"genesis_hash"`
+	DaoTypeHash                          *Hash            `json:"dao_type_hash"`
+	Secp256k1Blake160SighashAllTypeHash  *Hash            `json:"secp256k1_blake160_sighash_all_type_hash"`
+	Secp256k1Blake160MultisigAllTypeHash *Hash            `json:"secp256k1_blake160_multisig_all_type_hash"`
+	InitialPrimaryEpochReward            uint64           `json:"initial_primary_epoch_reward"`
+	SecondaryEpochReward                 uint64           `json:"secondary_epoch_reward"`
+	MaxUnclesNum                         uint64           `json:"max_uncles_num"`
+	OrphanRateTarget                     RationalU256     `json:"orphan_rate_target"`
+	EpochDurationTarget                  uint64           `json:"epoch_duration_target"`
+	TxProposalWindow                     ProposalWindow   `json:"tx_proposal_window"`
+	ProposerRewardRatio                  RationalU256     `json:"proposer_reward_ratio"`
+	CellbaseMaturity                     uint64           `json:"cellbase_maturity"`
+	MedianTimeBlockCount                 uint64           `json:"median_time_block_count"`
+	MaxBlockCycles                       uint64           `json:"max_block_cycles"`
+	MaxBlockBytes                        uint64           `json:"max_block_bytes"`
+	BlockVersion                         uint32           `json:"block_version"`
+	TxVersion                            uint32           `json:"tx_version"`
+	TypeIdCodeHash                       Hash             `json:"type_id_code_hash"`
+	MaxBlockProposalsLimit               uint64           `json:"max_block_proposals_limit"`
+	PrimaryEpochRewardHalvingInterval    uint64           `json:"primary_epoch_reward_halving_interval"`
+	PermanentDifficultyInDummy           bool             `json:"permanent_difficulty_in_dummy"`
+	HardforkFeatures                     HardForkFeatures `json:"hardfork_features"`
 }
+
+type HardForkFeatures map[string]*HardForkFeature
 
 type HardForkFeature struct {
 	Rfc         string  `json:"rfc"`
@@ -326,10 +330,13 @@ type EstimateCycles struct {
 	Cycles uint64 `json:"cycles"`
 }
 
-type FeeRateStatics struct {
+type FeeRateStatistics struct {
 	Mean   uint64 `json:"mean"`
 	Median uint64 `json:"median"`
 }
+
+// Deprecated: Use FeeRateStatistics instead
+type FeeRateStatics = FeeRateStatistics
 
 type TransactionAndWitnessProof struct {
 	BlockHash         Hash   `json:"block_hash"`

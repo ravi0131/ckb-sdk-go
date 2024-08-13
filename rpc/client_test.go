@@ -99,7 +99,7 @@ func TestClient_GetBlockWithCycles(t *testing.T) {
 
 func TestClient_GetTransaction(t *testing.T) {
 	txView, err := testClient.GetTransaction(ctx,
-		types.HexToHash("0x8277d74d33850581f8d843613ded0c2a1722dec0e87e748f45c115dfb14210f1"))
+		types.HexToHash("0x8277d74d33850581f8d843613ded0c2a1722dec0e87e748f45c115dfb14210f1"), nil)
 	assert.NoError(t, err)
 	tx := txView.Transaction
 	status := txView.TxStatus
@@ -395,7 +395,7 @@ func TestClient_GetLiveCell(t *testing.T) {
 		TxHash: types.HexToHash("0xf8de3bb47d055cdf460d93a2a6e1b05f7432f9777c8c474abf4eec1d4aee5d37"),
 		Index:  0,
 	}
-	cellWithStatus, err := testClient.GetLiveCell(ctx, &outPoint, true)
+	cellWithStatus, err := testClient.GetLiveCell(ctx, &outPoint, true, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -488,10 +488,10 @@ func TestGetTransactionsGrouped(t *testing.T) {
 }
 
 func TestClient_GetFeeRateStatics(t *testing.T) {
-	statics, err := testClient.GetFeeRateStatics(context.Background(), nil)
+	statics, err := testClient.GetFeeRateStatistics(context.Background(), nil)
 	assert.NoError(t, err)
 	assert.NotNil(t, statics)
-	statics2, err := testClient.GetFeeRateStatics(context.Background(), 1)
+	statics2, err := testClient.GetFeeRateStatistics(context.Background(), 1)
 	assert.NoError(t, err)
 	assert.NotNil(t, statics2)
 }

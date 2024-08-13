@@ -29,7 +29,7 @@ type DaoTransactionBuilder struct {
 }
 
 func NewDaoTransactionBuilder(network types.Network, iterator collector.CellIterator, daoOutPoint *types.OutPoint, client rpc.Client) (*DaoTransactionBuilder, error) {
-	cellWithStatus, err := client.GetLiveCell(context.Background(), daoOutPoint, true)
+	cellWithStatus, err := client.GetLiveCell(context.Background(), daoOutPoint, true, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func NewDaoTransactionBuilder(network types.Network, iterator collector.CellIter
 	depositCellCapacity := uint64(0)
 	reward := uint64(0)
 	if transactionType == DaoTransactionTypeWithdraw {
-		txWithStatus, err := client.GetTransaction(context.Background(), daoOutPoint.TxHash)
+		txWithStatus, err := client.GetTransaction(context.Background(), daoOutPoint.TxHash, nil)
 		if err != nil {
 			return nil, err
 		}
@@ -94,7 +94,7 @@ func getTransactionType(outputData []byte) (DaoTransactionType, error) {
 }
 
 func getDaoReward(withdrawOutPoint *types.OutPoint, client rpc.Client) (uint64, error) {
-	txWithStatus, err := client.GetTransaction(context.Background(), withdrawOutPoint.TxHash)
+	txWithStatus, err := client.GetTransaction(context.Background(), withdrawOutPoint.TxHash, nil)
 	if err != nil {
 		return 0, err
 	}
@@ -107,7 +107,7 @@ func getDaoReward(withdrawOutPoint *types.OutPoint, client rpc.Client) (uint64, 
 	)
 	for i := 0; i < len(withdrawTx.Inputs); i++ {
 		outPoint := withdrawTx.Inputs[i].PreviousOutput
-		txWithStatus, err := client.GetTransaction(context.Background(), outPoint.TxHash)
+		txWithStatus, err := client.GetTransaction(context.Background(), outPoint.TxHash, nil)
 		if err != nil {
 			return 0, err
 		}
