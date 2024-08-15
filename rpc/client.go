@@ -61,10 +61,10 @@ type Client interface {
 	GetPackedHeaderByNumber(ctx context.Context, number uint64) (*types.Header, error)
 	// GetLiveCell returns the information about a cell by out_point if it is live.
 	// If second with_data argument set to true, will return cell data and data_hash if it is live.
-	GetLiveCell(ctx context.Context, outPoint *types.OutPoint, withData bool, include_tx_pool *bool) (*types.CellWithStatus, error)
+	GetLiveCell(ctx context.Context, outPoint *types.OutPoint, withData bool, includeTxPool *bool) (*types.CellWithStatus, error)
 
 	// GetTransaction returns the information about a transaction requested by transaction hash.
-	GetTransaction(ctx context.Context, hash types.Hash, only_committed *bool) (*types.TransactionWithStatus, error)
+	GetTransaction(ctx context.Context, hash types.Hash, onlyCommitted *bool) (*types.TransactionWithStatus, error)
 
 	// GetBlockEconomicState return block economic state, It includes the rewards details and when it is finalized.
 	GetBlockEconomicState(ctx context.Context, hash types.Hash) (*types.BlockEconomicState, error)
@@ -446,22 +446,32 @@ func (cli *client) VerifyTransactionAndWitnessProof(ctx context.Context, proof *
 	return result, err
 }
 
-func (cli *client) GetLiveCell(ctx context.Context, point *types.OutPoint, withData bool, include_tx_pool *bool) (*types.CellWithStatus, error) {
-	var result types.CellWithStatus
-	err := cli.c.CallContext(ctx, &result, "get_live_cell", *point, withData)
+func (cli *client) GetLiveCell(ctx context.Context, point *types.OutPoint, withData bool, includeTxPool *bool) (*types.CellWithStatus, error) {
+	var (
+		result types.CellWithStatus
+		err    error
+	)
+
+	if includeTxPool == nil {
+		err = cli.c.CallContext(ctx, &result, "get_live_cell", *point, withData)
+	} else {
+		err = cli.c.CallContext(ctx, &result, "get_live_cell", *point, withData, *includeTxPool)
+	}
+
 	if err != nil {
 		return nil, err
 	}
+
 	return &result, err
 }
 
-func (cli *client) GetTransaction(ctx context.Context, hash types.Hash, only_committed *bool) (*types.TransactionWithStatus, error) {
+func (cli *client) GetTransaction(ctx context.Context, hash types.Hash, onlyCommitted *bool) (*types.TransactionWithStatus, error) {
 	var result types.TransactionWithStatus
 	var err error
-	if only_committed == nil {
+	if onlyCommitted == nil {
 		err = cli.c.CallContext(ctx, &result, "get_transaction", hash)
 	} else {
-		err = cli.c.CallContext(ctx, &result, "get_transaction", hash, *only_committed)
+		err = cli.c.CallContext(ctx, &result, "get_transaction", hash, *onlyCommitted)
 	}
 	if err != nil {
 		return nil, err

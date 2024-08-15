@@ -402,6 +402,21 @@ func TestClient_GetLiveCell(t *testing.T) {
 	assert.NotNil(t, cellWithStatus)
 }
 
+func TestClient_GetLiveCellIncludeTxPool(t *testing.T) {
+	outPoint := types.OutPoint{
+		TxHash: types.HexToHash("0xf8de3bb47d055cdf460d93a2a6e1b05f7432f9777c8c474abf4eec1d4aee5d37"),
+		Index:  0,
+	}
+
+	includeTxPool := true
+
+	cellWithStatus, err := testClient.GetLiveCell(ctx, &outPoint, true, &includeTxPool)
+	if err != nil {
+		t.Fatal(err)
+	}
+	assert.NotNil(t, cellWithStatus)
+}
+
 func TestGetTip(t *testing.T) {
 	resp, err := testClient.GetIndexerTip(context.Background())
 	assert.NoError(t, err)
