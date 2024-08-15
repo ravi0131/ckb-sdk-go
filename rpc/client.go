@@ -446,22 +446,32 @@ func (cli *client) VerifyTransactionAndWitnessProof(ctx context.Context, proof *
 	return result, err
 }
 
-func (cli *client) GetLiveCell(ctx context.Context, point *types.OutPoint, withData bool, include_tx_pool *bool) (*types.CellWithStatus, error) {
-	var result types.CellWithStatus
-	err := cli.c.CallContext(ctx, &result, "get_live_cell", *point, withData)
+func (cli *client) GetLiveCell(ctx context.Context, point *types.OutPoint, withData bool, includeTxPool *bool) (*types.CellWithStatus, error) {
+	var (
+		result types.CellWithStatus
+		err    error
+	)
+
+	if includeTxPool == nil {
+		err = cli.c.CallContext(ctx, &result, "get_live_cell", *point, withData)
+	} else {
+		err = cli.c.CallContext(ctx, &result, "get_live_cell", *point, withData, *includeTxPool)
+	}
+
 	if err != nil {
 		return nil, err
 	}
+
 	return &result, err
 }
 
-func (cli *client) GetTransaction(ctx context.Context, hash types.Hash, only_committed *bool) (*types.TransactionWithStatus, error) {
+func (cli *client) GetTransaction(ctx context.Context, hash types.Hash, onlyCommitted *bool) (*types.TransactionWithStatus, error) {
 	var result types.TransactionWithStatus
 	var err error
-	if only_committed == nil {
+	if onlyCommitted == nil {
 		err = cli.c.CallContext(ctx, &result, "get_transaction", hash)
 	} else {
-		err = cli.c.CallContext(ctx, &result, "get_transaction", hash, *only_committed)
+		err = cli.c.CallContext(ctx, &result, "get_transaction", hash, *onlyCommitted)
 	}
 	if err != nil {
 		return nil, err
