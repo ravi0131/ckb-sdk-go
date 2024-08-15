@@ -196,7 +196,7 @@ type Client interface {
 	GetDeploymentsInfo(ctx context.Context) (*types.DeploymentsInfo, error)
 
 	// GenerateEpochs generate epochs
-	GenerateEpochs(ctx context.Context, num_epochs uint64) (uint64, error)
+	GenerateEpochs(ctx context.Context, numEpochs uint64) (uint64, error)
 
 	// Close close client
 	Close()
@@ -887,9 +887,9 @@ func (cli *client) GetBlockEconomicState(ctx context.Context, blockHash types.Ha
 	return &result, nil
 }
 
-func (cli *client) GenerateEpochs(ctx context.Context, num_epochs uint64) (uint64, error) {
+func (cli *client) GenerateEpochs(ctx context.Context, numEpochs uint64) (uint64, error) {
 	var result hexutil.Uint64
-	err := cli.c.CallContext(ctx, &result, "generate_epochs", hexutil.Uint64(num_epochs))
+	err := cli.c.CallContext(ctx, &result, "generate_epochs", hexutil.Uint64(numEpochs))
 	if err != nil {
 		return 0, err
 	}
